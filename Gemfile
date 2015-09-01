@@ -65,7 +65,9 @@ group :development, :test do
 
   # shoulda
   gem 'shoulda'
+end
 
+group :test do
   # webmock
   gem 'webmock'
 end
