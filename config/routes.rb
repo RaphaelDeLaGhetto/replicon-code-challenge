@@ -15,6 +15,6 @@ Rails.application.routes.draw do
   get 'apps' => 'static_pages#apps'
 
   # employees
-  get 'employees/index'
-  get 'employees/show'
+  get 'employees', to: 'employees#index'
+  get 'employees/:id', to: 'employees#show', as: 'employee'
 end
