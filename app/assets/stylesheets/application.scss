@@ -36,6 +36,12 @@ textarea {
 }
   
 @import "custom";
+@import "account_activations";
+@import "registrations";
+@import "confirmations";
+@import "unlocks";
+@import "password_resets";
+@import "sessions";
 @import "static_pages";
 @import "agents";
 @import "employees";
