@@ -10,6 +10,32 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
- *= require_self
+ * require_tree .
+ * require_self
  */
+
+/* universal */
+
+body {
+    padding-top: 60px;
+} 
+  
+section {
+    overflow: auto;
+} 
+  
+textarea {
+    resize: vertical;
+}
+
+.center {
+    text-align: center;
+    h1 {
+        margin-bottom: 10px;
+    }
+}
+  
+@import "custom";
+@import "static_pages";
+@import "agents";
+@import "employees";

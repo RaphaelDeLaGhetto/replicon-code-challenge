@@ -1,0 +1,200 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+@mixin box_sizing {
+    -moz-box-sizing:    border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing:         border-box;
+}
+
+/* header */
+@mixin header {
+    #logo {
+        float: left;
+        margin-right: 10px;
+        font-size: 1.7em;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        padding-top: 9px;
+        font-weight: bold;
+        &:hover {
+            color: #fff;
+            text-decoration: none;
+        }
+    }
+}
+
+/* footer */
+@mixin footer {
+    footer {
+        margin-top: 45px;
+        padding-top: 5px;
+        border-top: 1px solid #eaeaea;
+        color: $gray-light;
+        a {
+            color: #555;
+            &:hover {
+                color: #222;
+            }
+        }
+        small {
+            float: left;
+        }
+        ul {
+            float: right;
+            list-style: none;
+            li {
+                float: left;
+                margin-left: 15px;
+            }
+        }
+    }
+}
+ 
+/* debug */
+@mixin debug {
+    .debug_dump {
+        clear: both;
+        float: left;
+        width: 100%;
+        margin-top: 45px;
+        @include box_sizing;
+    }
+}
+ 
+@mixin general_styles {
+    /* mixins, variables, etc. */
+    
+    $gray-medium-light: #eaeaea;
+    
+
+    
+    /* typography */
+    
+    h1, h2, h3, h4, h5, h6 {
+        line-height: 1;
+        word-wrap: break-word;
+    }
+    
+    h1 {
+        font-size: 3em;
+        letter-spacing: -2px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    h2 {
+        font-size: 1.7em;
+        letter-spacing: -1px;
+        margin-bottom: 10px;
+        text-align: center;
+        font-weight: normal;
+        color: $gray-light;
+    }
+    
+    h3 {
+        font-size: 1em;
+        text-align: center;
+        font-weight: normal;
+        color: $gray-light;
+    }
+    
+    p {
+        word-wrap: break-word;
+        font-size: 1.1em;
+        line-height: 1.7em;
+    }
+    
+   
+    /* header */
+    @include header;
+
+    /* footer */
+    @include footer;
+    
+    /* miscellaneous */
+    @include debug;
+    
+    /* forms */
+    
+    input, textarea, select, .uneditable-input {
+        border: 1px solid #bbb;
+        width: 100%;
+        margin-bottom: 15px;
+        @include box_sizing;
+    }
+    
+    input {
+        height: auto !important;
+    }
+    
+    #error_explanation {
+        color: red;
+        ul {
+            color: red;
+            margin: 0 0 30px 0;
+        }
+    }
+    
+    .field_with_errors {
+        @extend .has-error;
+        .form-control {
+            color: $state-danger-text;
+        }
+    }
+    
+    .checkbox {
+        margin-top: -10px;
+        margin-bottom: 10px;
+        span {
+            margin-left: 20px;
+            font-weight: normal;
+        }
+    }
+    
+    #session_remember_me {
+        width: auto;
+        margin-left: 0;
+    }
+
+    /**
+     * This prevents unwanted scrolls on scrollable divs
+     * 2015-5-14 http://stackoverflow.com/questions/28438184/unwanted-horizontal-scroll-bar-using-bootstrap-3
+     * (It doesn't work!)
+     */
+    .row{
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    /**
+     *
+     */
+    .question { 
+        font-size: large;
+        a {
+            color: darkgreen;
+        }
+    }
+
+    .ranking {
+        font-size: large;
+        font-weight: bold;
+        color: green;
+        margin: 0 30px 0 0;
+    }
+
+    .total-votes {
+        font-weight: bold;
+        color: green;
+        margin: 0 30px 0 0;
+    }
+
+    /**
+     * Tags
+     */
+    ul.token-input-list-facebook {
+        width: inherit;
+    }
+}
