@@ -17,13 +17,13 @@ RUN rm -f /etc/service/nginx/down
 
 # Configure Nginx
 RUN rm /etc/nginx/sites-enabled/default
-ADD docker/rails-devise-template.conf /etc/nginx/sites-enabled/rails-devise-template.conf
+ADD docker/replicon-code-challenge.conf /etc/nginx/sites-enabled/replicon-code-challenge.conf
 ADD docker/postgres-env.conf /etc/nginx/main.d/postgres-env.conf
 
 # Install the app
-ADD . /home/app/rails-devise-template
-WORKDIR /home/app/rails-devise-template
-RUN chown -R app:app /home/app/rails-devise-template 
+ADD . /home/app/replicon-code-challenge
+WORKDIR /home/app/replicon-code-challenge
+RUN chown -R app:app /home/app/replicon-code-challenge 
 RUN sudo -u app bundle install --deployment
 
 # Install `node` modules without `sudo`
