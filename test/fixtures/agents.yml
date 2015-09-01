@@ -1,0 +1,42 @@
+daniel:
+  name: Daniel Bidulock
+  email: daniel@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(Agent, 'password') %> 
+  admin: true
+  confirmation_token: SomeToken001
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+
+archer:
+  name: Sterling Archer
+  email: duchess@example.gov
+  encrypted_password: <%= Devise::Encryptor.digest(Agent, 'password') %> 
+  confirmation_token: SomeToken002
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+
+lana:
+  name: Lana Kane
+  email: hands@example.gov
+  encrypted_password: <%= Devise::Encryptor.digest(Agent, 'password') %> 
+  confirmation_token: SomeToken003
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+
+mallory:
+  name: Mallory Archer
+  email: boss@example.gov
+  encrypted_password: <%= Devise::Encryptor.digest(Agent, 'password') %> 
+  confirmation_token: SomeToken004
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+
+<% 30.times do |n| %>
+agent_<%= n %>:
+  name:  <%= "Agent #{n}" %>
+  email: <%= "agent-#{n}@example.com" %>
+  encrypted_password: <%= Devise::Encryptor.digest(Agent, 'password') %> 
+  confirmation_token: <%= "SomeToken#{n}" %>
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+<% end %>

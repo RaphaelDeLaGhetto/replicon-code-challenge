@@ -1,0 +1,50 @@
+{
+  "name": "my-hai",
+  "version": "0.0.0",
+  "description": "React and Jest are ready to go!",
+  "main": "application.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RaphaelDeLaGhetto/rails-devise-template.git"
+  },
+  "keywords": [
+    "hai"
+  ],
+  "author": "Daniel Bidulock",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify-incremental": "^2.0.0",
+    "jest-cli": "^0.4.0",
+    "jquery": "^2.1.3",
+    "react-tools": "^0.13.1"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "node ./node_modules/jest-cli/bin/jest.js"
+  },
+  "jest": {
+    "rootDir": "./app/assets/javascripts/components",
+    "scriptPreprocessor": "<rootDir>/__tests__/preprocessor.js",
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "unmockedModulePathPatterns": [
+      "react"
+    ],
+    "testFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "testPathIgnorePatterns": [
+      "preprocessor.js"
+    ]
+  },
+  "dependencies": {
+    "browserify": "^11.0.1",
+    "react": "^0.13.3",
+    "reactify": "^1.1.1"
+  }
+}
