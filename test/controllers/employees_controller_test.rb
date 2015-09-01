@@ -15,20 +15,6 @@ class EmployeesControllerTest < ActionController::TestCase
     assert_redirected_to login_url
   end
 
-
-#  test "should get index" do
-#    get :index
-#    assert_response :success
-#  end
-
-  #
-  # show
-  #
-#  test "should get show" do
-#    get :show
-#    assert_response :success
-#  end
-
   #
   # show
   #
