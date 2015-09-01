@@ -7,8 +7,14 @@ class Ability
       if agent.admin?
         can :manage, :all
       else
+        # agents
         can [:edit, :show, :update], Agent, :id => agent.id
+        
+        # apps
         can :apps, :static_page
+
+        # employees
+        can :manage, :employee
       end
     end
 
