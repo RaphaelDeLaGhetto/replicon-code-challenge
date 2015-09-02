@@ -13,4 +13,4 @@
   </ul>
 <% end %>
 <br />
-<div id='calendar' data-events="<%= @events %>" data-start-date="<%= @start_date.to_formatted_s(:db) %>"></div>
+<div id='calendar' data-events="<%= @events.to_json %>" data-start-date="<%= @start_date.to_formatted_s(:db) %>"></div>
