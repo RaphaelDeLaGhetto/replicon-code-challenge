@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
     $('#calendar').fullCalendar({
-        defaultDate: moment('2015-06-01'),
+        defaultDate: moment($('#calendar').data('start-date')),
         header: {
             center: false,
             right: false,
