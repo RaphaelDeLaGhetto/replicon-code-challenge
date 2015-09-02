@@ -43,4 +43,6 @@ Rails.application.configure do
   # Devise
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 
+  # Capybara is not threadsafe, or something (2015-9-2 https://github.com/jnicklas/capybara#setup)
+  config.allow_concurrency = false
 end
