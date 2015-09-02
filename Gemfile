@@ -75,5 +75,10 @@ end
 group :test do
   # webmock
   gem 'webmock'
+
+  # capybara
+  gem 'capybara'
+  gem 'poltergeist'
+  gem 'selenium-webdriver'
 end
 
