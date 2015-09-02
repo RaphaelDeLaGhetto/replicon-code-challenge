@@ -5,8 +5,7 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
   def setup
     @agent = agents(:archer)
 
-    stub_request(:get, 'http://interviewtest.replicon.com/employees').
-        to_return(:body => File.new('test/json/employees.json'), :status => 200)
+    mock_api
 
     @employees = JSON.parse(File.read('test/json/employees.json'))
   end
