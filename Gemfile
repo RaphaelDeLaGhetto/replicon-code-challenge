@@ -53,6 +53,11 @@ gem 'browserify-rails'
 # httparty
 gem 'httparty'
 
+# calendar
+gem 'momentjs-rails'
+gem 'fullcalendar-rails'
+gem 'jquery-turbolinks'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
