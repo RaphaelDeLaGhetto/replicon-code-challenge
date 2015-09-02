@@ -35,6 +35,7 @@ class EmployeesController < ApplicationController
       # Ad hoc June scheduling
       # TODO: add date picker to make this more robust
       
+
     end
 
     #
@@ -67,7 +68,7 @@ class EmployeesController < ApplicationController
     # get_rule_definitions
     #
     def get_rule_definitions
-      response = HTTParty.get("#{DOMAIN}/ruledefinitions")
+      response = HTTParty.get("#{DOMAIN}/rule-definitions")
       case response.code
         when 200
           @rule_definitions = JSON.parse(response.body)

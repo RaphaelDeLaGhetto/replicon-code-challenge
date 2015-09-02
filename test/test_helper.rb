@@ -22,7 +22,7 @@ class ActiveSupport::TestCase
     stub_request(:get, "#{DOMAIN}/shift-rules").
         to_return(:body => File.new('test/json/shift_rules.json'), :status => 200)
 
-    stub_request(:get, "#{DOMAIN}/ruledefinitions").
+    stub_request(:get, "#{DOMAIN}/rule-definitions").
         to_return(:body => File.new('test/json/ruledefinitions.json'), :status => 200)
 
     stub_request(:get, "#{DOMAIN}/weeks/23").

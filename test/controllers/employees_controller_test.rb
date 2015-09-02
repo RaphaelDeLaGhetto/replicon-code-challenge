@@ -104,7 +104,7 @@ class EmployeesControllerTest < ActionController::TestCase
   end
 
   test "should set an error message if app can't get rule_definitions list" do
-    stub_request(:get, "#{DOMAIN}/ruledefinitions").
+    stub_request(:get, "#{DOMAIN}/rule-definitions").
         to_return(:body => 'Some crazy error message', :status => 500)
 
     sign_in(@agent)
