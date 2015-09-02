@@ -115,6 +115,25 @@ class EmployeesControllerTest < ActionController::TestCase
     assert_equal 'The rule definitions could not be retrieved: 500', flash[:error]
   end
 
+  test "should set the events instance variable when logged in" do
+    sign_in(@agent)
+    get :index
+    assert_response :success
+
+    events = assigns(:events)
+    assert_not_nil assigns(:events)
+
+    # 4 weeks x 7 days x 2 employees per day
+    assert_equal 4*7*2, events.count
+
+    assert_equal 'Lanny McDonald', events[0][:title]
+    assert_equal 'LannyMcDonald', events[0][:id]
+    assert_equal '2015-06-01', events[0][:start]
+
+    assert_equal events[-1][:id], events[-1][:title].gsub(/[^0-9A-Za-z]/, '')
+    assert_equal '2015-06-28', events[-1][:start]
+  end
+
   #
   # show
   #

@@ -35,7 +35,29 @@ class EmployeesController < ApplicationController
       # Ad hoc June scheduling
       # TODO: add date picker to make this more robust
       
+      # Apply the EMPLOYEES_PER_SHIFT rule
+      employees_per_shift = nil
+      @rule_definitions.each do |definition|
+        id = definition['id'] if definition['value'] == 'EMPLOYEES_PER_SHIFT'
+        if id
+          @shift_rules.each do |rule|
+            employees_per_shift = rule['value'] if id == rule['rule_id']
+            break if employees_per_shift
+          end
+          break
+        end
+      end
 
+      # Create the schedule
+      @events = []
+      index = 0
+      (@start_date..@end_date).each do |day|
+        employees_per_shift.times do |i|
+          name = @employees[index]['name']
+          @events << { title: name, id: name.gsub(/[^0-9A-Za-z]/, ''), start: day.to_formatted_s(:db) }
+          index = (index + 1) % @employees.count
+        end
+      end
     end
 
     #
