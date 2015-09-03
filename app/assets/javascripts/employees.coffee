@@ -14,14 +14,14 @@ $ ->
         ,
     });
 
-    $('.employee').click(toggle_coworkers) 
+    $('.employee').click(hide_coworkers) 
 
 #
 # Click on an employee and hide his coworkers' schedules
 #
 # @param string
 #
-toggle_coworkers = (event) ->
+hide_coworkers = (event) ->
     event.preventDefault()
     these = $('.fc-event-container > a:not(#' + $(this).data('employee-id') + ')')
     hide_coworkers = ->
