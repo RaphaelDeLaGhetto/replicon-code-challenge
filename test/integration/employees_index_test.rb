@@ -31,8 +31,6 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     # +1 for the 'Show all' link
     assert_select 'ul.employees>li', count: 5+1
     @employees.each do |employee|
-      #assert_select 'a[href=?]', employee_path(employee['id']), text: employee['name']
-      #assert_select 'a[onclick=?]', "toggle_coworkers('#{employee['name'].gsub(/[^0-9A-Za-z]/, '')}')", count: 1
       assert_select 'a[data-employee-id=?]', employee['name'].gsub(/[^0-9A-Za-z]/, ''), count: 1
     end
   end
