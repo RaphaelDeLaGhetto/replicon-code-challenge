@@ -31,7 +31,6 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
 
 
   test "should display the correct number of scheduled shifts for each employee" do
-
     # Sign in
     visit login_path
     fill_in 'Email', with: 'hands@example.gov'
@@ -40,14 +39,10 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
 
     visit(employees_path)
     assert page.has_selector?(".fc-toolbar", count: 1)
-    assert page.has_selector?("#LannyMcDonald", count: 13)
-#
-#    get employees_path
-#    assert_template 'employees/index'
-#
-#    assert_select '.fc-toolbar', count: 1
-#    assert_select 'AllenPitts', count: 5
-#    assert_select 'LannyMcDonald', count: 5
-
+    assert page.has_selector?("#AllenPitts", count: 11)
+    assert page.has_selector?("#LannyMcDonald", count: 12)
+    assert page.has_selector?("#DaveSapunjis", count: 11)
+    assert page.has_selector?("#GaryRoberts", count: 11)
+    assert page.has_selector?("#MikeVernon", count: 11)
   end
 end
