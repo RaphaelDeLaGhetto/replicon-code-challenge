@@ -23,8 +23,13 @@ $ ->
 #
 hide_coworkers = (event) ->
     event.preventDefault()
-    these = $('.fc-event-container > a:not(#' + $(this).data('employee-id') + ')')
-    hide_coworkers = ->
-        $(these).hide()
-    $('.fc-event-container').children().show().promise().done(hide_coworkers)
+    id = $(this).data('employee-id')
+
+    if id is 'show-all' 
+        $('.fc-event-container').children().show()
+    else
+        these = $('.fc-event-container > a:not(#' + id + ')')
+        hide_coworkers = ->
+            $(these).hide()
+        $('.fc-event-container').children().show().promise().done(hide_coworkers)
 

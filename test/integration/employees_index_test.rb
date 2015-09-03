@@ -28,7 +28,8 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     assert_template 'employees/index'
 
     # Ensure the correct number of employees are displayed
-    assert_select 'ul.employees>li', count: 5
+    # +1 for the 'Show all' link
+    assert_select 'ul.employees>li', count: 5+1
     @employees.each do |employee|
       #assert_select 'a[href=?]', employee_path(employee['id']), text: employee['name']
       #assert_select 'a[onclick=?]', "toggle_coworkers('#{employee['name'].gsub(/[^0-9A-Za-z]/, '')}')", count: 1
@@ -75,5 +76,12 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     assert page.has_selector?('#AllenPitts', visible: false)
     assert page.has_selector?("#DaveSapunjis", visible: false)
     assert page.has_selector?("#GaryRoberts", visible: false)
+
+    click_on 'Show all'
+    assert page.has_selector?("#MikeVernon", visible: true)
+    assert page.has_selector?('#LannyMcDonald', visible: true)
+    assert page.has_selector?('#AllenPitts', visible: true)
+    assert page.has_selector?("#DaveSapunjis", visible: true)
+    assert page.has_selector?("#GaryRoberts", visible: true)
   end
 end
