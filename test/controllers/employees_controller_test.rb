@@ -137,20 +137,4 @@ class EmployeesControllerTest < ActionController::TestCase
     assert_equal events[-1][:id], events[-1][:title].gsub(/[^0-9A-Za-z]/, '')
     assert_equal '2015-06-28', events[-1][:start]
   end
-
-  #
-  # show
-  #
-  test "should redirect show when not logged in" do
-    get :show, id: @agent
-    assert_redirected_to login_url
-  end
-
-  test "should show when logged in" do
-    sign_in(@agent)
-    get :show, id: @agent
-    assert_response :success
-  end
-
-
 end

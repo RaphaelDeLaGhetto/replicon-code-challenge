@@ -16,5 +16,4 @@ Rails.application.routes.draw do
 
   # employees
   get 'employees', to: 'employees#index'
-  get 'employees/:id', to: 'employees#show', as: 'employee'
 end

@@ -17,12 +17,6 @@ class EmployeesController < ApplicationController
   def index
   end
 
-  #
-  # show
-  #
-  def show
-  end
-
   private
 
     #
