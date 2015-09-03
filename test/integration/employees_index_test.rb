@@ -82,4 +82,16 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     assert page.has_selector?("#DaveSapunjis", visible: true)
     assert page.has_selector?("#GaryRoberts", visible: true)
   end
+
+  test "should submit the schedule to Replicon" do
+    # Sign in
+    visit login_path
+    fill_in 'Email', with: 'hands@example.gov'
+    fill_in 'Password', with: 'password'
+    click_button "Log in"
+
+    visit(employees_path)
+
+
+  end
 end

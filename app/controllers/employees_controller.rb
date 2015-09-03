@@ -42,14 +42,48 @@ class EmployeesController < ApplicationController
       end
 
       # Create the schedule
+      @schedule = []
+      day_index = 0
+      week_index = -1
+
+      # Create calendar events
       @events = []
-      index = 0
+      employee_index = 0
+
       (@start_date..@end_date).each do |day|
-        employees_per_shift.times do |i|
-          name = @employees[index]['name']
-          @events << { title: name, id: name.gsub(/[^0-9A-Za-z]/, ''), start: day.to_formatted_s(:db) }
-          index = (index + 1) % @employees.count
+        # Schedule data
+        if day_index % 7 == 0
+          week_index += 1
+          day_index = 0
+          @schedule << { week: WEEK_NUMBERS[week_index], schedules: [] }
         end
+        day_index += 1
+
+        # Calendar events
+        employees_per_shift.times do |i|
+          name = @employees[employee_index]['name']
+          @events << { title: name, id: name.gsub(/[^0-9A-Za-z]/, ''), start: day.to_formatted_s(:db) }
+
+          # Get index of employee's schedule for this week
+          schedule_index = nil
+          @schedule[week_index][:schedules].each_with_index do |schedule, i|
+            if schedule[:employee_id] == @employees[employee_index]['id']
+              schedule_index = i
+              break
+            end
+          end
+
+          # Insert day into employee's schedule
+          if schedule_index
+            @schedule[week_index][:schedules][schedule_index][:schedule] << day_index
+          else
+            @schedule[week_index][:schedules] << { employee_id: @employees[employee_index]['id'], schedule: [day_index] }
+          end
+
+          # Point to the next employee in line
+          employee_index = (employee_index + 1) % @employees.count
+        end
+
       end
     end
 
