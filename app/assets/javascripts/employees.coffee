@@ -13,4 +13,18 @@ $ ->
             element.attr('id', event.id);
         ,
     });
-    console.log('hello', $('#calendar').data('events'));
+
+    $('.employee').click(toggle_coworkers) 
+
+#
+# Click on an employee and hide his coworkers' schedules
+#
+# @param string
+#
+toggle_coworkers = (event) ->
+    event.preventDefault()
+    these = $('.fc-event-container > a:not(#' + $(this).data('employee-id') + ')')
+    hide_coworkers = ->
+        $(these).hide()
+    $('.fc-event-container').children().show().promise().done(hide_coworkers)
+

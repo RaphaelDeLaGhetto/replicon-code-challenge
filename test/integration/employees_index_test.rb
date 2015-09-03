@@ -14,6 +14,11 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     @employees = JSON.parse(File.read('test/json/employees.json'))
   end
 
+  def teardown
+    delete destroy_agent_session_path
+    Capybara.reset_sessions!
+  end
+
   test "index as authorized agent" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @agent.email, 'agent[password]': 'password'
@@ -25,7 +30,9 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     # Ensure the correct number of employees are displayed
     assert_select 'ul.employees>li', count: 5
     @employees.each do |employee|
-      assert_select 'a[href=?]', employee_path(employee['id']), text: employee['name']
+      #assert_select 'a[href=?]', employee_path(employee['id']), text: employee['name']
+      #assert_select 'a[onclick=?]', "toggle_coworkers('#{employee['name'].gsub(/[^0-9A-Za-z]/, '')}')", count: 1
+      assert_select 'a[data-employee-id=?]', employee['name'].gsub(/[^0-9A-Za-z]/, ''), count: 1
     end
   end
 
@@ -44,5 +51,29 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     assert page.has_selector?("#DaveSapunjis", count: 11)
     assert page.has_selector?("#GaryRoberts", count: 11)
     assert page.has_selector?("#MikeVernon", count: 11)
+  end
+
+  test "should toggle coworker schedule visibility when employee link is clicked" do
+    # Sign in
+    visit login_path
+    fill_in 'Email', with: 'hands@example.gov'
+    fill_in 'Password', with: 'password'
+    click_button "Log in"
+
+    visit(employees_path)
+
+    click_on 'Lanny McDonald'
+    assert page.has_selector?('#LannyMcDonald', visible: true)
+    assert page.has_selector?('#AllenPitts', visible: false)
+    assert page.has_selector?("#DaveSapunjis", visible: false)
+    assert page.has_selector?("#GaryRoberts", visible: false)
+    assert page.has_selector?("#MikeVernon", visible: false)
+
+    click_on 'Mike Vernon'
+    assert page.has_selector?("#MikeVernon", visible: true)
+    assert page.has_selector?('#LannyMcDonald', visible: false)
+    assert page.has_selector?('#AllenPitts', visible: false)
+    assert page.has_selector?("#DaveSapunjis", visible: false)
+    assert page.has_selector?("#GaryRoberts", visible: false)
   end
 end
