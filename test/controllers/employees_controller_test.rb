@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class EmployeesControllerTest < ActionController::TestCase
+  should use_before_action :get_employees
+  should use_before_action :get_rule_definitions
+  should use_before_action :get_shift_rules
+  should use_before_action :get_date_range
   should use_before_action :schedule
 
   def setup

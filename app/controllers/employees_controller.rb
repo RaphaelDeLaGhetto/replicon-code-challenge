@@ -2,6 +2,10 @@ class EmployeesController < ApplicationController
   before_filter do
     authorize! :manage, :employee
   end
+  before_action :get_employees, only: [:index]
+  before_action :get_rule_definitions, only: [:index]
+  before_action :get_shift_rules, only: [:index]
+  before_action :get_date_range, only: [:index]
   before_action :schedule, only: [:index]
 
   DOMAIN = 'http://interviewtest.replicon.com'
@@ -25,11 +29,6 @@ class EmployeesController < ApplicationController
     # schedule
     #
     def schedule
-      get_employees
-      get_rule_definitions
-      get_shift_rules
-      get_date_range
-
       return if @employees.nil? || @shift_rules.nil? || @rule_definitions.nil? || @start_date.nil?
 
       # Ad hoc June scheduling
