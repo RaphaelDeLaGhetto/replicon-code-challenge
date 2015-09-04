@@ -49,11 +49,7 @@ class ActiveSupport::TestCase
     stub_request(:get, "#{DOMAIN}/weeks/26").
         to_return(:body => File.new('test/json/week_26.json'), :status => 200)
 
-    stub_request(:post, "#{DOMAIN}/submit").
-        with(:query => { name: 'Daniel Bidulock', email: 'daniel@bidulock.ca', features: [1] })
-
-    stub_request(:post, "#{DOMAIN}/submit").
-        with(:query => { name: 'Daniel Bidulock', email: 'daniel@bidulock.ca', features: [1], solution: true })
+    stub_request(:post, "#{DOMAIN}/submit")#.
   end
 
 end
