@@ -16,4 +16,5 @@ Rails.application.routes.draw do
 
   # employees
   get 'employees', to: 'employees#index'
+  post 'submit', to: 'employees#submit'
 end
