@@ -32,6 +32,7 @@ class EmployeesController < ApplicationController
     @response = HTTParty.post("#{@@domain}/submit", 
       :body => params[:employee][:schedule],
       :headers => { 'Content-Type' => 'application/json' } )
+    @response = @response.parsed_response
   end
 
   private
