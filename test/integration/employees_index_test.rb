@@ -92,6 +92,7 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
 
     visit(employees_path)
 
+    click_on 'Submit schedule'
 
   end
 end
