@@ -174,4 +174,28 @@ class EmployeesControllerTest < ActionController::TestCase
     assert_equal 26, schedule[3][:week]
     assert_equal 5, schedule[3][:schedules].count
   end
+
+  #
+  # submit
+  #
+  test "should redirect submit when not logged in" do
+    post :submit#, schedule#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'} 
+    assert_redirected_to login_url
+  end
+
+  test "should POST data to replicon when logged in" do
+    sign_in(@agent)
+    get :index
+    assert_response :success
+
+    schedule = JSON.parse(File.read('test/json/schedule.json'))
+    post :submit, { 'schedule' => schedule }, :format => "json"
+    assert_response :success
+
+    assert_requested(:post, "#{DOMAIN}/submit", :body => schedule, :headers => {'Content-Type'=>'application/json'} )
+
+    response = assigns(:response)
+    assert_not_nil response
+
+  end
 end
