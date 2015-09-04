@@ -8,7 +8,15 @@ class EmployeesController < ApplicationController
   before_action :get_date_range, only: [:index]
   before_action :schedule, only: [:index]
 
-  DOMAIN = 'http://interviewtest.replicon.com'
+  #
+  # Base URL class variable and helper method for access in the view
+  #
+  @@domain = 'http://interviewtest.replicon.com'
+  helper_method :domain
+  def domain
+    @@domain
+  end
+
   WEEK_NUMBERS = [23, 24, 25, 26]
 
   #
@@ -17,7 +25,21 @@ class EmployeesController < ApplicationController
   def index
   end
 
+  #
+  # submit
+  #
+  def submit
+    @response = HTTParty.post("#{@@domain}/submit", 
+      :body => params[:employee][:schedule],
+      :headers => { 'Content-Type' => 'application/json' } )
+  end
+
   private
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def employee_params
+      params.require(:employee).permit(:schedule)
+    end
 
     #
     # schedule
@@ -83,7 +105,6 @@ class EmployeesController < ApplicationController
           # Point to the next employee in line
           employee_index = (employee_index + 1) % @employees.count
         end
-
       end
     end
 
@@ -91,7 +112,7 @@ class EmployeesController < ApplicationController
     # get_employees
     #
     def get_employees
-      response = HTTParty.get("#{DOMAIN}/employees")
+      response = HTTParty.get("#{@@domain}/employees")
       case response.code
         when 200
           @employees = JSON.parse(response.body)
@@ -104,7 +125,7 @@ class EmployeesController < ApplicationController
     # get_shift_rules
     #
     def get_shift_rules
-      response = HTTParty.get("#{DOMAIN}/shift-rules")
+      response = HTTParty.get("#{@@domain}/shift-rules")
       case response.code
         when 200
           @shift_rules = JSON.parse(response.body)
@@ -117,7 +138,7 @@ class EmployeesController < ApplicationController
     # get_rule_definitions
     #
     def get_rule_definitions
-      response = HTTParty.get("#{DOMAIN}/rule-definitions")
+      response = HTTParty.get("#{@@domain}/rule-definitions")
       case response.code
         when 200
           @rule_definitions = JSON.parse(response.body)
@@ -132,7 +153,7 @@ class EmployeesController < ApplicationController
     # This is hard-coded to start in June, for now
     #
     def get_date_range
-      response = HTTParty.get("#{DOMAIN}/weeks/#{WEEK_NUMBERS[0]}")
+      response = HTTParty.get("#{@@domain}/weeks/#{WEEK_NUMBERS[0]}")
       case response.code
         when 200
           @start_date = Date.parse(JSON.parse(response.body)['start_date'])
@@ -140,7 +161,7 @@ class EmployeesController < ApplicationController
           flash[:error] = "The start date could not be retrieved: #{response.code}"
       end
 
-      response = HTTParty.get("#{DOMAIN}/weeks/#{WEEK_NUMBERS.last}")
+      response = HTTParty.get("#{@@domain}/weeks/#{WEEK_NUMBERS.last}")
       case response.code
         when 200
           # Adding six takes us to the last day before the new week
