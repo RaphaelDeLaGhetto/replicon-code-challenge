@@ -19,8 +19,6 @@ $ ->
 #
 # Click on an employee and hide his coworkers' schedules
 #
-# @param string
-#
 hide_coworkers = (event) ->
     event.preventDefault()
     id = $(this).data('employee-id')
@@ -32,4 +30,3 @@ hide_coworkers = (event) ->
         hide_coworkers = ->
             $(these).hide()
         $('.fc-event-container').children().show().promise().done(hide_coworkers)
-
