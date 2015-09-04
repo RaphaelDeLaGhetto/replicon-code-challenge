@@ -6,12 +6,14 @@ class AgentsAddTest < ActionDispatch::IntegrationTest
     ActionMailer::Base.deliveries.clear
     @admin = agents(:daniel)
     @agent = agents(:archer)
+
+    mock_api
   end
 
   test "invalid signup information" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @admin.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
 
     # Go to create new agent page
     get new_agent_path
@@ -31,7 +33,7 @@ class AgentsAddTest < ActionDispatch::IntegrationTest
   test "invalid non-admin signup" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @agent.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
 
     # Go to create new agent page
     get new_agent_path
@@ -53,7 +55,7 @@ class AgentsAddTest < ActionDispatch::IntegrationTest
   test "valid signup information with account activation" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @admin.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
 
     # Go to create new agent page
     get new_agent_path
@@ -104,7 +106,7 @@ class AgentsAddTest < ActionDispatch::IntegrationTest
   test "valid admin signup information with account activation" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @admin.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
 
     # Go to create new agent page
     get new_agent_path

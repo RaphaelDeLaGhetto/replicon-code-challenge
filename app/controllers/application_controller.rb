@@ -35,6 +35,6 @@ class ApplicationController < ActionController::Base
     # 2015-8-28 https://github.com/plataformatec/devise/wiki/How-To:-Redirect-back-to-current-page-after-sign-in,-sign-out,-sign-up,-update#a-simpler-solution
     #
     def after_sign_in_path_for(resource)
-      session['agent_return_to'] || root_url
+      session['agent_return_to'] || employees_path
     end
 end

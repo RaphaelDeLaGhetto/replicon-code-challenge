@@ -23,9 +23,6 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
   test "index as authorized agent" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @agent.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
-
-    get employees_path
     assert_template 'employees/index'
 
     # Ensure the correct number of employees are displayed

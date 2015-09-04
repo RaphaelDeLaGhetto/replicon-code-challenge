@@ -4,12 +4,14 @@ class AgentsIndexTest < ActionDispatch::IntegrationTest
   def setup
     @admin = agents(:daniel)
     @agent = agents(:archer)
+
+    mock_api
   end
 
   test "index as admin including pagination with edit and delete links and a button to add a new agent" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @admin.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
 
     get agents_path
     assert_template 'agents/index'
@@ -33,7 +35,7 @@ class AgentsIndexTest < ActionDispatch::IntegrationTest
   test "redirect index for non-admin" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @agent.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
 
     # Only an admin can view all agents
     get agents_path

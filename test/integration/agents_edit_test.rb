@@ -3,12 +3,14 @@ require 'test_helper'
 class AgentsEditTest < ActionDispatch::IntegrationTest
   def setup
     @admin = agents(:daniel)
+
+    mock_api
   end
 
   test "unsuccessful edit" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @admin.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
 
     get edit_agent_path(@admin)
     assert_template 'agents/edit'
@@ -22,7 +24,7 @@ class AgentsEditTest < ActionDispatch::IntegrationTest
   test "successful edit" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @admin.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
 
     get edit_agent_path(@admin)
     assert_template 'agents/edit'
@@ -42,7 +44,7 @@ class AgentsEditTest < ActionDispatch::IntegrationTest
   test "successful admin edit" do
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @admin.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
 
     other_agent = agents(:lana)
     get edit_agent_path(other_agent)

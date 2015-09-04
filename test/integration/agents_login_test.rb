@@ -4,6 +4,8 @@ class AgentsLoginTest < ActionDispatch::IntegrationTest
 
   def setup
     @agent = agents(:archer)
+
+    mock_api
   end
 
   test "login with invalid information" do
@@ -27,7 +29,7 @@ class AgentsLoginTest < ActionDispatch::IntegrationTest
 
     # Sign in
     post_via_redirect agent_session_path, 'agent[email]': @agent.email, 'agent[password]': 'password'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
     assert_equal 'Signed in successfully.', flash[:notice]
 
     assert_select "a[href=?]", login_path, count: 0
@@ -53,7 +55,7 @@ class AgentsLoginTest < ActionDispatch::IntegrationTest
     post_via_redirect agent_session_path, 'agent[email]': @agent.email,
                                           'agent[password]': 'password',
                                           'agent[remember_me]': '1'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
     assert_equal 'Signed in successfully.', flash[:notice]
 
     assert @request.cookie_jar.has_key?('remember_agent_token')
@@ -64,7 +66,7 @@ class AgentsLoginTest < ActionDispatch::IntegrationTest
     post_via_redirect agent_session_path, 'agent[email]': @agent.email,
                                           'agent[password]': 'password',
                                           'agent[remember_me]': '0'
-    assert_template 'static_pages/home'
+    assert_template 'employees/index'
     assert_equal 'Signed in successfully.', flash[:notice]
 
     assert_not @request.cookie_jar.has_key?('remember_agent_token')
