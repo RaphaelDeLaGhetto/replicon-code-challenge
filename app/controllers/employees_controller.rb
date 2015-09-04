@@ -29,18 +29,19 @@ class EmployeesController < ApplicationController
   # submit
   #
   def submit
+    query = { name: 'Daniel Bidulock', email: 'daniel@bidulock.ca', features: [1] }
+
+    # For real submission
+    query[:solution] = true if params[:employee][:solution] == '1'
+
     @response = HTTParty.post("#{@@domain}/submit", 
       :body => params[:employee][:schedule],
+      :query => query,
       :headers => { 'Content-Type' => 'application/json' } )
     @response = @response.parsed_response
   end
 
   private
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def employee_params
-      params.require(:employee).permit(:schedule)
-    end
 
     #
     # schedule

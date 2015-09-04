@@ -14,6 +14,10 @@ class EmployeesControllerTest < ActionController::TestCase
     mock_api
   end
 
+  def teardown
+    WebMock.reset!
+  end
+
   #
   # index
   #
@@ -179,7 +183,8 @@ class EmployeesControllerTest < ActionController::TestCase
   # submit
   #
   test "should redirect submit when not logged in" do
-    post :submit#, schedule#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'} 
+    schedule = JSON.parse(File.read('test/json/schedule.json'))
+    post :submit, { :employee => { 'schedule' => schedule } }, :format => "json"
     assert_redirected_to login_url
   end
 
@@ -189,13 +194,15 @@ class EmployeesControllerTest < ActionController::TestCase
     assert_response :success
 
     schedule = JSON.parse(File.read('test/json/schedule.json'))
-    post :submit, { 'schedule' => schedule }, :format => "json"
+    post :submit, { :employee => { 'schedule' => schedule } }, :format => "json"
     assert_response :success
 
-    assert_requested(:post, "#{DOMAIN}/submit", :body => schedule, :headers => {'Content-Type'=>'application/json'} )
+    assert_requested(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&name=Daniel%20Bidulock", :headers => {'Content-Type'=>'application/json'} )
 
     response = assigns(:response)
     assert_not_nil response
 
+    assert_equal 'Thanks!', response['thank_you']
+    assert_equal schedule, response['submission']
   end
 end

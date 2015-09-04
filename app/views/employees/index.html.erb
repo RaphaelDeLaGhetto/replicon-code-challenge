@@ -23,6 +23,8 @@
   <span class="col-xs-12 center">
     <%= form_for :employee, url: { action: "submit" } do |f| %>
       <%= f.hidden_field :schedule, value: @schedule.to_json %><br />
+      <%= f.label :solution, "Submit for real" %>
+      <%= f.check_box :solution, id: 'for-real' %><br />
       <%= f.submit value: 'Submit schedule', class: 'btn btn-primary' %>
     <% end %>
   </span>

@@ -49,7 +49,14 @@ class ActiveSupport::TestCase
     stub_request(:get, "#{DOMAIN}/weeks/26").
         to_return(:body => File.new('test/json/week_26.json'), :status => 200)
 
-    stub_request(:post, "#{DOMAIN}/submit")#.
+    stub_request(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&name=Daniel%20Bidulock").
+        to_return(:body => { thank_you: 'Thanks!', :submission => JSON.parse(File.read('test/json/schedule.json')) }.to_json,
+                  :headers => {'Content-Type' => 'application/json'})#  submission: File.new('test/json/week_26.json') }, :status => 200)
+
+    stub_request(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&name=Daniel%20Bidulock&solution=true").
+        to_return(:body => { thank_you: 'Thanks!', :submission => JSON.parse(File.read('test/json/schedule.json')) }.to_json,
+                  :headers => {'Content-Type' => 'application/json'})#  submission: File.new('test/json/week_26.json') }, :status => 200)
+
   end
 
 end

@@ -17,6 +17,7 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
   def teardown
     delete destroy_agent_session_path
     Capybara.reset_sessions!
+    WebMock.reset!
   end
 
   test "index as authorized agent" do
@@ -93,6 +94,29 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     visit(employees_path)
 
     click_on 'Submit schedule'
+    assert page.has_selector?('#thank-you', text: 'Thanks!')
 
+    schedule = JSON.parse(File.read('test/json/schedule.json'))
+    assert page.has_selector?('#submitted', visible: true)
+  end
+
+  test "should submit the schedule to Replicon for real" do
+    # Sign in
+    visit login_path
+    fill_in 'Email', with: 'hands@example.gov'
+    fill_in 'Password', with: 'password'
+    click_button "Log in"
+
+    visit(employees_path)
+
+    # Check the submit-for-real box
+    find(:css, '#for-real').set(true)
+    click_on 'Submit schedule'
+
+    assert_requested(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&name=Daniel%20Bidulock&solution=true")
+
+    assert page.has_selector?('#thank-you', text: 'Thanks!')
+    schedule = JSON.parse(File.read('test/json/schedule.json'))
+    assert page.has_selector?('#submitted', visible: true)
   end
 end
