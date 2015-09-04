@@ -2,6 +2,7 @@
 <h1>Employees</h1>
 
 <% if !@employees.nil? %>
+<div class='row'>
   <ul class="employees">
     <% @employees.each do |employee| %>
     <li>
@@ -16,6 +17,15 @@
       </span>
     </li
   </ul>
+</div>
 <% end %>
+<div class='row'>
+  <span class="col-xs-12 center">
+    <%= form_for :employee, url: { action: "submit" } do |f| %>
+      <%= f.hidden_field :schedule, value: @schedule.to_json %><br />
+      <%= f.submit value: 'Submit schedule', class: 'btn btn-primary' %>
+    <% end %>
+  </span>
+</div>
 <br />
 <div id='calendar' data-events="<%= @events.to_json %>" data-start-date="<%= @start_date.to_formatted_s(:db) %>"></div>
