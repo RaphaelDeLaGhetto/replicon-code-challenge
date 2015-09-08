@@ -44,16 +44,6 @@ class ApiDummyControllerTest < ActionController::TestCase
     # Week 23
     assert_equal 23, schedule[0][:week]
     assert_equal 5, schedule[0][:schedules].count
-#    assert_equal 1, schedule[0][:schedules][0][:employee_id]
-#    assert_equal [1, 3, 6], schedule[0][:schedules][0][:schedule]
-#    assert_equal 2, schedule[0][:schedules][1][:employee_id]
-#    assert_equal [1, 4, 6], schedule[0][:schedules][1][:schedule]
-#    assert_equal 3, schedule[0][:schedules][2][:employee_id]
-#    assert_equal [2, 4, 7], schedule[0][:schedules][2][:schedule]
-#    assert_equal 4, schedule[0][:schedules][3][:employee_id]
-#    assert_equal [2, 5, 7], schedule[0][:schedules][3][:schedule]
-#    assert_equal 5, schedule[0][:schedules][4][:employee_id]
-#    assert_equal [3, 5], schedule[0][:schedules][4][:schedule]
 
     # Week 24
     assert_equal 24, schedule[1][:week]
@@ -85,7 +75,7 @@ class ApiDummyControllerTest < ActionController::TestCase
     assert_equal 5, schedule[0][:schedules].count
 
     # Week 24
-    # Someone got some time off
+    # (Note the count: Someone got some time off)
     assert_equal 24, schedule[1][:week]
     assert_equal 4, schedule[1][:schedules].count
 
