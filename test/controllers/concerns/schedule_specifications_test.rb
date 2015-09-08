@@ -7,7 +7,6 @@ class DummyController < ApplicationController
 end
 
 class DummyControllerTest < ActionController::TestCase
- 
 
   def setup
     @employees = JSON.parse(File.read('test/json/employees.json'))
@@ -51,5 +50,4 @@ class DummyControllerTest < ActionController::TestCase
     assert_not timeoff_spec.is_satisfied_by?({ employee_id: 5, week: 26, day: 4 })
     assert_not timeoff_spec.is_satisfied_by?({ employee_id: 2, week: 26, day: 2 })
   end
-
 end

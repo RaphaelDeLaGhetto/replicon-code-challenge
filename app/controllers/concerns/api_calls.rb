@@ -13,7 +13,6 @@ module ApiCalls extend ActiveSupport::Concern
   # Base URL class variable and helper method for access in the view
   #
   @@domain = 'http://interviewtest.replicon.com'
-#  helper_method :domain
   def domain
     @@domain
   end
