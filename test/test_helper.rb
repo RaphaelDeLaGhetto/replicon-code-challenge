@@ -66,3 +66,14 @@ class ActionController::TestCase
   include Devise::TestHelpers
 end
 
+#
+# This is for testing concerns. It overrides routes and views
+#
+module MyEngine
+  class Engine < Rails::Engine
+  end
+end
+
+MyEngine::Engine.routes.draw do
+  get "/" => "api_dummy#index"
+end
