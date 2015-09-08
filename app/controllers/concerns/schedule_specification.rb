@@ -63,9 +63,12 @@ module ScheduleSpecification extend ActiveSupport::Concern
   # Determine if an employee is available to work the shift specified
   #
   class IsAvailable
-    def initialize(employees, timeoff_requests)
+    def initialize(schedule, employees, timeoff_requests, shift_rules, rule_definitions)
+      @schedule = schedule
       @employees = employees
       @timeoff_requests = timeoff_requests
+      @shift_rules = shift_rules
+      @rule_definitions = rule_definitions
     end
 
     def is_satisfied_by?(subject)

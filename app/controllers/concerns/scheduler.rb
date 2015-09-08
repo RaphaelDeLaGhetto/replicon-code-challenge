@@ -17,7 +17,6 @@ module Scheduler extend ActiveSupport::Concern
               @timeoff.nil?
 
 
-    available_spec = ScheduleSpecification::IsAvailable.new(@employees, @timeoff)
 
     # Ad hoc June scheduling
     # TODO: add date picker to make this more robust
@@ -39,6 +38,9 @@ module Scheduler extend ActiveSupport::Concern
     @schedule = []
     day_index = 0
     week_index = -1
+
+    # Fire up the specifications
+    available_spec = ScheduleSpecification::IsAvailable.new(@schedule, @employees, @timeoff, @shift_rules, @rule_definitions)
 
     # Create calendar events
     @events = []

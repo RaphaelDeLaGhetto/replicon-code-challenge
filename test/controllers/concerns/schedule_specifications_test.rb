@@ -9,15 +9,18 @@ end
 class DummyControllerTest < ActionController::TestCase
 
   def setup
+    @schedule = []
     @employees = JSON.parse(File.read('test/json/employees.json'))
     @timeoff = JSON.parse(File.read('test/json/timeoff.json'))
+    @shift_rules = JSON.parse(File.read('test/json/shift_rules.json'))
+    @rule_definitions = JSON.parse(File.read('test/json/ruledefinitions.json'))
   end
 
   #
   # IsAvailable
   #
   test "should return true if employee did not request time off" do
-    available_spec = ScheduleSpecification::IsAvailable.new(@employees, @timeoff)
+    available_spec = ScheduleSpecification::IsAvailable.new(@schedule, @employees, @timeoff, @shift_rules, @rule_definitions)
     assert available_spec.is_satisfied_by?({ employee_id: 1, week: 23, day: 4 })
     assert available_spec.is_satisfied_by?({ employee_id: 2, week: 23, day: 1 })
     assert available_spec.is_satisfied_by?({ employee_id: 5, week: 26, day: 4 })
@@ -25,7 +28,7 @@ class DummyControllerTest < ActionController::TestCase
   end
  
   test "should return false if employee requested time off" do
-    available_spec = ScheduleSpecification::IsAvailable.new(@employees, @timeoff)
+    available_spec = ScheduleSpecification::IsAvailable.new(@schedule, @employees, @timeoff, @shift_rules, @rule_definitions)
     assert_not available_spec.is_satisfied_by?({ employee_id: 1, week: 23, day: 1 })
     assert_not available_spec.is_satisfied_by?({ employee_id: 2, week: 23, day: 7 })
     assert_not available_spec.is_satisfied_by?({ employee_id: 5, week: 26, day: 3 })
