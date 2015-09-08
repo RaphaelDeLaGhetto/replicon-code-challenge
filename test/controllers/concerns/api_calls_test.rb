@@ -14,7 +14,10 @@ class ApiDummyControllerTest < ActionController::TestCase
     mock_api
   end
 
-  test "should set the start_date and end_date instance variables when logged in" do
+  #
+  # start_date and end_date
+  #
+  test "should set the start_date and end_date instance variables" do
     get :index
     assert_response :success
 
@@ -23,7 +26,10 @@ class ApiDummyControllerTest < ActionController::TestCase
     assert_equal Date.new(2015, 06, 28), assigns(:end_date)
   end
 
-  test "should set the employees instance variable when logged in" do
+  #
+  # employees
+  #
+  test "should set the employees instance variable" do
     get :index
     assert_not_nil assigns(:employees)
     assert_response :success
@@ -48,7 +54,10 @@ class ApiDummyControllerTest < ActionController::TestCase
     assert_equal 'The employee list could not be retrieved: 500', flash[:error]
   end
 
-  test "should set the shift_rules instance variable when logged in" do
+  #
+  # shift_rules
+  #
+  test "should set the shift_rules instance variable" do
     get :index
     assert_not_nil assigns(:shift_rules)
     assert_response :success
@@ -75,7 +84,10 @@ class ApiDummyControllerTest < ActionController::TestCase
     assert_equal 'The shift rules could not be retrieved: 500', flash[:error]
   end
 
-  test "should set the rule_definitions instance variable when logged in" do
+  #
+  # rule_definitions
+  #
+  test "should set the rule_definitions instance variable" do
     get :index
     assert_not_nil assigns(:rule_definitions)
     assert_response :success
@@ -102,5 +114,36 @@ class ApiDummyControllerTest < ActionController::TestCase
     assert_response :success
 
     assert_equal 'The rule definitions could not be retrieved: 500', flash[:error]
+  end
+
+  #
+  # timeoff
+  #
+  test "should set the timeoff instance variable" do
+    get :index
+    assert_not_nil assigns(:timeoff)
+    assert_response :success
+
+    timeoff = assigns(:timeoff)
+    assert_equal 14, timeoff.count
+
+    assert_equal [1, 2, 3], timeoff[0]['days']
+    assert_equal 1, timeoff[0]['employee_id']
+    assert_equal 23, timeoff[0]['week']
+
+    assert_equal [1], timeoff.last['days']
+    assert_equal 2, timeoff.last['employee_id']
+    assert_equal 26, timeoff.last['week']
+  end
+
+  test "should set an error message if app can't get timeoff list" do
+    stub_request(:get, "#{DOMAIN}/time-off/requests").
+        to_return(:body => 'Some crazy error message', :status => 500)
+
+    get :index
+    assert_nil assigns(:timeoff)
+    assert_response :success
+
+    assert_equal 'The timeoff details could not be retrieved: 500', flash[:error]
   end
 end

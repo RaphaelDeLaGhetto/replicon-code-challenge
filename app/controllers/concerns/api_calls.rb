@@ -7,6 +7,7 @@ module ApiCalls extend ActiveSupport::Concern
     before_action :get_rule_definitions, only: [:index]
     before_action :get_shift_rules, only: [:index]
     before_action :get_date_range, only: [:index]
+    before_action :get_timeoff, only: [:index]
   end
 
   #
@@ -81,4 +82,16 @@ module ApiCalls extend ActiveSupport::Concern
     end
   end
 
+  #
+  # get_timeoff
+  #
+  def get_timeoff
+    response = HTTParty.get("#{@@domain}/time-off/requests")
+    case response.code
+      when 200
+        @timeoff = JSON.parse(response.body)
+      else
+        flash[:error] = "The timeoff details could not be retrieved: #{response.code}"
+    end
+  end
 end

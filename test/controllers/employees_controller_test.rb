@@ -5,6 +5,7 @@ class EmployeesControllerTest < ActionController::TestCase
   should use_before_action :get_rule_definitions
   should use_before_action :get_shift_rules
   should use_before_action :get_date_range
+  should use_before_action :get_timeoff
   should use_before_action :schedule
 
   def setup
@@ -179,6 +180,38 @@ class EmployeesControllerTest < ActionController::TestCase
     assert_equal 5, schedule[3][:schedules].count
   end
 
+  #
+  # timeoff
+  #
+  test "should set the timeoff instance variable when logged in" do
+    sign_in(@agent)
+    get :index
+    assert_not_nil assigns(:timeoff)
+    assert_response :success
+
+    timeoff = assigns(:timeoff)
+    assert_equal 14, timeoff.count
+
+    assert_equal [1, 2, 3], timeoff[0]['days']
+    assert_equal 1, timeoff[0]['employee_id']
+    assert_equal 23, timeoff[0]['week']
+
+    assert_equal [1], timeoff.last['days']
+    assert_equal 2, timeoff.last['employee_id']
+    assert_equal 26, timeoff.last['week']
+  end
+
+  test "should set an error message if app can't get timeoff list" do
+    stub_request(:get, "#{DOMAIN}/time-off/requests").
+        to_return(:body => 'Some crazy error message', :status => 500)
+
+    sign_in(@agent)
+    get :index
+    assert_nil assigns(:timeoff)
+    assert_response :success
+
+    assert_equal 'The timeoff details could not be retrieved: 500', flash[:error]
+  end
   #
   # submit
   #
