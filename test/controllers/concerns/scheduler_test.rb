@@ -98,32 +98,115 @@ class ApiDummyControllerTest < ActionController::TestCase
     assert_equal 4, schedule.count
 
     # Week 23
-    puts schedule.inspect
     assert_equal 23, schedule[0][:week]
     assert_equal 5, schedule[0][:schedules].count
-    assert_equal 2, schedule[0][:schedules][0][:employee_id]
-    assert_equal 5, schedule[0][:schedules][0][:schedule].count
-    assert_equal 5, schedule[0][:schedules][1][:employee_id]
-    assert_equal 5, schedule[0][:schedules][1][:schedule].count
-    assert_equal 5, schedule[0][:schedules][2][:employee_id]
-    assert_equal 5, schedule[0][:schedules][2][:schedule].count
-    assert_equal 5, schedule[0][:schedules][3][:employee_id]
-    assert_equal 5, schedule[0][:schedules][3][:schedule].count
-    assert_equal 5, schedule[0][:schedules][4][:employee_id]
-    assert_equal 5, schedule[0][:schedules][4][:schedule].count
+
+    schedule[0][:schedules].each do |sched|
+      puts sched[:employee_id]
+      case sched[:employee_id]
+      when 1
+        puts 'HERE 1' 
+        assert sched[:schedule].count > 2
+        assert_not sched[:schedule].include?(1)
+        assert_not sched[:schedule].include?(2)
+        assert_not sched[:schedule].include?(3)
+      when 2
+        puts 'HERE 2' 
+        assert sched[:schedule].count > 3
+        assert_not sched[:schedule].include?(5)
+        assert_not sched[:schedule].include?(6)
+        assert_not sched[:schedule].include?(7)
+      when 3
+        puts 'HERE 3' 
+        assert sched[:schedule].count > 1
+        assert_not sched[:schedule].include?(6)
+        assert_not sched[:schedule].include?(7)
+      when 4..5
+        puts 'HERE 4..5' 
+        assert sched[:schedule].count > 1
+      end
+    end
 
     # Week 24
     # (Note the count: Someone got some time off)
     assert_equal 24, schedule[1][:week]
-    assert_equal 4, schedule[1][:schedules].count
+#    assert_equal 4, schedule[1][:schedules].count
+    assert_equal 5, schedule[1][:schedules].count
+
+    schedule[1][:schedules].each do |sched|
+      case sched[:employee_id]
+      when 1
+        assert sched[:schedule].count > 2
+      when 2
+        assert sched[:schedule].count > 4
+      when 3
+        assert sched[:schedule].count > 1
+      when 4
+        assert sched[:schedule].count > 1
+        assert_not sched[:schedule].include?(1)
+        assert_not sched[:schedule].include?(3)
+        assert_not sched[:schedule].include?(4)
+      when 5
+        assert sched[:schedule].count > 1
+        assert_not sched[:schedule].include?(5)
+        assert_not sched[:schedule].include?(6)
+        assert_not sched[:schedule].include?(7)
+      end
+    end
 
     # Week 25
     assert_equal 25, schedule[2][:week]
     assert_equal 5, schedule[2][:schedules].count
 
+    schedule[2][:schedules].each do |sched|
+      case sched[:employee_id]
+      when 1
+#        assert sched[:schedule].count > 2
+        assert_not sched[:schedule].include?(1)
+        assert_not sched[:schedule].include?(2)
+        assert_not sched[:schedule].include?(3)
+        assert_not sched[:schedule].include?(7)
+      when 2
+        assert sched[:schedule].count > 4
+      when 3
+        assert sched[:schedule].count > 1
+        assert_not sched[:schedule].include?(6)
+        assert_not sched[:schedule].include?(7)
+      when 4
+        assert sched[:schedule].count > 1
+        assert_not sched[:schedule].include?(5)
+        assert_not sched[:schedule].include?(6)
+        assert_not sched[:schedule].include?(7)
+      when 5
+        assert sched[:schedule].count > 1
+      end
+    end
+
     # Week 26
     assert_equal 26, schedule[3][:week]
     assert_equal 5, schedule[3][:schedules].count
 
+    schedule[3][:schedules].each do |sched|
+      case sched[:employee_id]
+      when 1
+        assert sched[:schedule].count > 2
+      when 2
+#        assert sched[:schedule].count > 4
+#        assert_not sched[:schedule].include?(1)
+      when 3
+        assert sched[:schedule].count > 1
+      when 4
+        assert sched[:schedule].count > 1
+        assert_not sched[:schedule].include?(1)
+#        assert_not sched[:schedule].include?(2)
+        assert_not sched[:schedule].include?(3)
+        assert_not sched[:schedule].include?(4)
+      when 5
+        assert sched[:schedule].count > 1
+        assert_not sched[:schedule].include?(1)
+        assert_not sched[:schedule].include?(2)
+        assert_not sched[:schedule].include?(3)
+      end
+    end
   end
 end
