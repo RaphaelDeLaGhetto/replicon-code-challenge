@@ -40,6 +40,9 @@ module Scheduler extend ActiveSupport::Concern
     # Fire up the specifications
     available_spec = ScheduleSpecification::IsAvailable.new(@schedule, @employees, @timeoff, @shift_rules, @rule_definitions)
     needs_more_shifts_spec = ScheduleSpecification::NeedsMoreShifts.new(@schedule, @shift_rules, @rule_definitions)
+    already_scheduled_spec = ScheduleSpecification::AlreadyScheduled.new(@schedule, @employees)
+    requested_timeoff_spec = ScheduleSpecification::RequestedTimeoff.new(@timeoff)
+    exceeds_max_shifts_spec = ScheduleSpecification::ExceedsMaxShifts.new(@schedule, @shift_rules, @rule_definitions)
 
     # Create calendar events
     @events = []
@@ -58,29 +61,47 @@ module Scheduler extend ActiveSupport::Concern
       # Build the schedule and the calendar events
       #
 
-      # Keep track of schedule employees so that no one gets double booked
-      scheduled_employees = []
+      # Count the number of schedule employees so the EMPLOYEES_PER_SHIFT
+      # rule can be enforced
+      scheduled_employees = 0 
 
       # If the number of attempts at scheduling exceeds available employees,
       # rules and time off requests are ignored
       tries = 0
       force_schedule = false
 
-      while scheduled_employees.count < employees_per_shift do
-        if force_schedule ||
-           (tries < @employees.count &&
-           available_spec.is_satisfied_by?({ employee_id: @employees[employee_index]['id'],
-                                             week: WEEK_NUMBERS[week_index],
-                                             day: day_index }))
+      # Go until every open shift has been filled
+      while scheduled_employees < employees_per_shift do
 
-          # If this condition is true, all employees have been considered for a shift
-          # twice and no one was found. This stops the loop from trying forever.
-          break if tries >= @employees.count * 2
-          tries += 1
+        #
+        # If an available employee hasn't turned up on the first pass, make one
+        # last-ditch effort to respect time off requests
+        #
+        if (force_schedule)
+          @employees.each_with_index do |employee, index|
+            subject = { employee_id: employee['id'],
+                        week: WEEK_NUMBERS[week_index],
+                        day: day_index }
+            if !already_scheduled_spec.is_satisfied_by?(subject) &&
+               !requested_timeoff_spec.is_satisfied_by?(subject) &&
+               !exceeds_max_shifts_spec.is_satisfied_by?(subject)
+              employee_index = index
+              break
+            end
+          end
+        end
 
-          # Skip if this employee is already scheduled to work
-          next if scheduled_employees.include?(@employees[employee_index]['id'])
-          scheduled_employees << @employees[employee_index]['id']
+        # The subject used in satisfying the schedule specifications
+        subject = { employee_id: @employees[employee_index]['id'],
+                    week: WEEK_NUMBERS[week_index],
+                    day: day_index }
+
+        if (force_schedule &&
+            !already_scheduled_spec.is_satisfied_by?(subject) &&
+            !exceeds_max_shifts_spec.is_satisfied_by?(subject)) ||
+           available_spec.is_satisfied_by?(subject)
+
+          scheduled_employees += 1
 
           # Calendar events
           name = @employees[employee_index]['name']
@@ -101,30 +122,25 @@ module Scheduler extend ActiveSupport::Concern
           else
             @schedule[week_index][:schedules] << { employee_id: @employees[employee_index]['id'], schedule: [day_index] }
           end
-        else
-          force_schedule = true
         end
 
-        # If an employee has not received his shift quota, keep alternating until enough 
-        # shifts have been scheduled
+        # Ignore rules and pick the next person in the queue if no employee is found for a shift
+        tries += 1
+        force_schedule = tries >= @employees.count
+        break if tries >= @employees.count * 2
+        
+        # If an employee has not received his shift quota, keep skipping ahead until enough 
+        # shifts have been scheduled (unless time off was requested)
         next_index = (employee_index + 1) % @employees.count
-        if needs_more_shifts_spec.is_satisfied_by?({ employee_id: @employees[employee_index]['id'],
-                                                     week: WEEK_NUMBERS[week_index],
-                                                     day: day_index }) &&
-           available_spec.is_satisfied_by?({ employee_id: @employees[employee_index]['id'],
-                                             week: WEEK_NUMBERS[week_index],
-                                             day: day_index })
-
-#           next_index = (employee_index-1) % @employees.count
-
-#          puts "BEFORE #{@employees.inspect}"
+        if needs_more_shifts_spec.is_satisfied_by?(subject) &&
+           !requested_timeoff_spec.is_satisfied_by?(subject)
+            
           @employees[employee_index], @employees[(next_index+1) % @employees.count] =
                 @employees[(next_index+1) % @employees.count], @employees[employee_index]
-#          puts "AFTER #{@employees.inspect}"
         end
 
         # Point to the next employee in line
-        employee_index = next_index #(employee_index + 1) % @employees.count
+        employee_index = next_index
       end
     end
   end

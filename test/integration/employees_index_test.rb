@@ -43,11 +43,11 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
 
     visit(employees_path)
     assert page.has_selector?(".fc-toolbar", count: 1)
-    assert page.has_selector?("#AllenPitts", count: 11)
-    assert page.has_selector?("#LannyMcDonald", count: 10)
-    assert page.has_selector?("#DaveSapunjis", count: 10)
-    assert page.has_selector?("#GaryRoberts", count: 13)
-    assert page.has_selector?("#MikeVernon", count: 12)
+    assert page.has_selector?("#AllenPitts", count: 17)
+    assert page.has_selector?("#LannyMcDonald", count: 12)
+    assert page.has_selector?("#DaveSapunjis", count: 9)
+    assert page.has_selector?("#GaryRoberts", count: 9)
+    assert page.has_selector?("#MikeVernon", count: 9)
   end
 
   test "should toggle coworker schedule visibility when employee link is clicked" do

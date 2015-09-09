@@ -37,10 +37,20 @@ class ApiDummyControllerTest < ActionController::TestCase
     employees = assigns(:employees)
     assert_equal 5, employees.count
 
-    assert_equal 'Lanny McDonald', employees[0]['name']
-    assert_equal 1, employees[0]['id']
-    assert_equal 'Mike Vernon', employees[4]['name']
-    assert_equal 5, employees[4]['id']
+    employees.each do |employee|
+      case employee['id']
+      when 1
+        assert_equal 'Lanny McDonald', employee['name']
+      when 2
+        assert_equal 'Allen Pitts', employee['name']
+      when 3
+        assert_equal 'Gary Roberts', employee['name']
+      when 4
+        assert_equal 'Dave Sapunjis', employee['name']
+      when 5
+        assert_equal 'Mike Vernon', employee['name']
+      end
+    end
   end
 
   test "should set an error message if app can't get employee list" do
