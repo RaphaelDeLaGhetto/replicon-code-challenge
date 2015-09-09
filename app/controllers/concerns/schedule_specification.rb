@@ -38,6 +38,20 @@ module ScheduleSpecification extend ActiveSupport::Concern
     end
   end
 
+  #
+  # Examine an employees schedule and execute block
+  #
+  def self.find_employee_in_schedule(schedule, subject, &block)
+    schedule.each do |sched|
+      if sched[:week] == subject[:week]
+        sched[:schedules].each do |s|
+          if s[:employee_id] == subject[:employee_id]
+            return block.call(s, subject)
+          end
+        end
+      end
+    end   
+  end
 
   #
   # Consider employees' requests for time off
@@ -98,15 +112,8 @@ module ScheduleSpecification extend ActiveSupport::Concern
       end
 
       # Find the week and count the number of scheduled shifts
-      @schedule.each do |schedule|
-        if schedule[:week] == subject[:week]
-          schedule[:schedules].each do |sched|
-            if sched[:employee_id] == subject[:employee_id]
-              exceeds_max_shifts = sched[:schedule].count >= max_shifts 
-              break
-            end
-          end
-        end
+      ScheduleSpecification.find_employee_in_schedule(@schedule, subject) do |sched, subject|
+        exceeds_max_shifts = sched[:schedule].count >= max_shifts 
       end
 
       exceeds_max_shifts
@@ -152,21 +159,32 @@ module ScheduleSpecification extend ActiveSupport::Concern
       end
 
       # Find the week and count the number of scheduled shifts
-      @schedule.each do |schedule|
-        if schedule[:week] == subject[:week]
-          schedule[:schedules].each do |sched|
-            if sched[:employee_id] == subject[:employee_id]
-              needs_more_shifts = !(sched[:schedule].count >= min_shifts) 
-              break
-            end
-          end
-        end
+      ScheduleSpecification.find_employee_in_schedule(@schedule, subject) do |sched, subject|
+        needs_more_shifts = !(sched[:schedule].count >= min_shifts) 
       end
 
       needs_more_shifts
     end
   end
 
+  #
+  # Return true if an employee is already scheduled that shift
+  #
+  class AlreadyScheduled
+    def initialize(schedule, employees)
+      @schedule = schedule
+      @employees = employees
+    end
+
+    def is_satisfied_by?(subject)
+      already_scheduled = false
+      ScheduleSpecification.find_employee_in_schedule(@schedule, subject) do |sched, subject|
+        already_scheduled = sched[:schedule].include?(subject[:day])
+      end
+      already_scheduled
+    end
+  end
+ 
   #
   # Determine if an employee is available to work the shift specified
   #
@@ -185,7 +203,7 @@ module ScheduleSpecification extend ActiveSupport::Concern
 
     private
       def specification
-        Generic::And.new([no_timeoff_requested, does_not_exceed_max_shifts, needs_more_shifts])
+        Generic::And.new([no_timeoff_requested, does_not_exceed_max_shifts, needs_more_shifts, not_aready_scheduled])
       end
 
       def no_timeoff_requested
@@ -197,8 +215,11 @@ module ScheduleSpecification extend ActiveSupport::Concern
       end
 
       def needs_more_shifts
-#        Generic::Not.new(NeedsMoreShifts.new(@schedule, @shift_rules, @rule_definitions))
         NeedsMoreShifts.new(@schedule, @shift_rules, @rule_definitions)
+      end
+
+      def not_aready_scheduled
+        Generic::Not.new(AlreadyScheduled.new(@schedule, @employees))
       end
   end
 end

@@ -160,4 +160,39 @@ class DummyControllerTest < ActionController::TestCase
     assert_not min_shifts_spec.is_satisfied_by?({ employee_id: 3, week: 23 })
     assert_not min_shifts_spec.is_satisfied_by?({ employee_id: 4, week: 23 })
   end
+
+  #
+  # AlreadyScheduled
+  #
+  test "should return true if the employee is already scheduled to work that shift" do
+    schedule = [
+        {
+            "week": 23,
+            "schedules": [
+                { "employee_id": 3, "schedule": [1] },
+                { "employee_id": 4, "schedule": [1, 3] }
+            ]
+        }
+    ]
+    already_scheduled_spec = ScheduleSpecification::AlreadyScheduled.new(schedule, @employees)
+    assert already_scheduled_spec.is_satisfied_by?({ employee_id: 3, week: 23, day: 1 })
+    assert already_scheduled_spec.is_satisfied_by?({ employee_id: 4, week: 23, day: 1 })
+    assert already_scheduled_spec.is_satisfied_by?({ employee_id: 4, week: 23, day: 3 })
+  end
+
+  test "should return false if the employee is not scheduled to work that shift" do
+    schedule = [
+        {
+            "week": 23,
+            "schedules": [
+                { "employee_id": 3, "schedule": [1] },
+                { "employee_id": 4, "schedule": [1, 3] }
+            ]
+        }
+    ]
+    already_scheduled_spec = ScheduleSpecification::AlreadyScheduled.new(schedule, @employees)
+    assert_not already_scheduled_spec.is_satisfied_by?({ employee_id: 1, week: 23, day: 1 })
+    assert_not already_scheduled_spec.is_satisfied_by?({ employee_id: 3, week: 23, day: 2 })
+    assert_not already_scheduled_spec.is_satisfied_by?({ employee_id: 4, week: 23, day: 2 })
+  end
 end
