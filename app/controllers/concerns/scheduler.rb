@@ -16,8 +16,6 @@ module Scheduler extend ActiveSupport::Concern
               @start_date.nil? ||
               @timeoff.nil?
 
-
-
     # Ad hoc June scheduling
     # TODO: add date picker to make this more robust
     
@@ -41,6 +39,7 @@ module Scheduler extend ActiveSupport::Concern
 
     # Fire up the specifications
     available_spec = ScheduleSpecification::IsAvailable.new(@schedule, @employees, @timeoff, @shift_rules, @rule_definitions)
+    needs_more_shifts_spec = ScheduleSpecification::NeedsMoreShifts.new(@schedule, @shift_rules, @rule_definitions)
 
     # Create calendar events
     @events = []
@@ -106,8 +105,26 @@ module Scheduler extend ActiveSupport::Concern
           force_schedule = true
         end
 
+        # If an employee has not received his shift quota, keep alternating until enough 
+        # shifts have been scheduled
+        next_index = (employee_index + 1) % @employees.count
+        if needs_more_shifts_spec.is_satisfied_by?({ employee_id: @employees[employee_index]['id'],
+                                                     week: WEEK_NUMBERS[week_index],
+                                                     day: day_index }) &&
+           available_spec.is_satisfied_by?({ employee_id: @employees[employee_index]['id'],
+                                             week: WEEK_NUMBERS[week_index],
+                                             day: day_index })
+
+#           next_index = (employee_index-1) % @employees.count
+
+#          puts "BEFORE #{@employees.inspect}"
+          @employees[employee_index], @employees[(next_index+1) % @employees.count] =
+                @employees[(next_index+1) % @employees.count], @employees[employee_index]
+#          puts "AFTER #{@employees.inspect}"
+        end
+
         # Point to the next employee in line
-        employee_index = (employee_index + 1) % @employees.count
+        employee_index = next_index #(employee_index + 1) % @employees.count
       end
     end
   end

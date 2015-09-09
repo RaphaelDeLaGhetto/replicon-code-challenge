@@ -87,4 +87,43 @@ class ApiDummyControllerTest < ActionController::TestCase
     assert_equal 26, schedule[3][:week]
     assert_equal 5, schedule[3][:schedules].count
   end
+
+  test "should ensure every employee gets the minimum number of shifts" do
+    get :index
+    assert_response :success
+
+    schedule = assigns(:schedule)
+    assert_not_nil schedule
+
+    assert_equal 4, schedule.count
+
+    # Week 23
+    puts schedule.inspect
+    assert_equal 23, schedule[0][:week]
+    assert_equal 5, schedule[0][:schedules].count
+    assert_equal 2, schedule[0][:schedules][0][:employee_id]
+    assert_equal 5, schedule[0][:schedules][0][:schedule].count
+    assert_equal 5, schedule[0][:schedules][1][:employee_id]
+    assert_equal 5, schedule[0][:schedules][1][:schedule].count
+    assert_equal 5, schedule[0][:schedules][2][:employee_id]
+    assert_equal 5, schedule[0][:schedules][2][:schedule].count
+    assert_equal 5, schedule[0][:schedules][3][:employee_id]
+    assert_equal 5, schedule[0][:schedules][3][:schedule].count
+    assert_equal 5, schedule[0][:schedules][4][:employee_id]
+    assert_equal 5, schedule[0][:schedules][4][:schedule].count
+
+    # Week 24
+    # (Note the count: Someone got some time off)
+    assert_equal 24, schedule[1][:week]
+    assert_equal 4, schedule[1][:schedules].count
+
+    # Week 25
+    assert_equal 25, schedule[2][:week]
+    assert_equal 5, schedule[2][:schedules].count
+
+    # Week 26
+    assert_equal 26, schedule[3][:week]
+    assert_equal 5, schedule[3][:schedules].count
+
+  end
 end

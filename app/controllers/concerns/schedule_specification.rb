@@ -185,11 +185,20 @@ module ScheduleSpecification extend ActiveSupport::Concern
 
     private
       def specification
-        Generic::And.new([no_timeoff_requested])
+        Generic::And.new([no_timeoff_requested, does_not_exceed_max_shifts, needs_more_shifts])
       end
 
       def no_timeoff_requested
         Generic::Not.new(RequestedTimeoff.new(@timeoff_requests))
+      end
+
+      def does_not_exceed_max_shifts
+        Generic::Not.new(ExceedsMaxShifts.new(@schedule, @shift_rules, @rule_definitions))
+      end
+
+      def needs_more_shifts
+#        Generic::Not.new(NeedsMoreShifts.new(@schedule, @shift_rules, @rule_definitions))
+        NeedsMoreShifts.new(@schedule, @shift_rules, @rule_definitions)
       end
   end
 end
