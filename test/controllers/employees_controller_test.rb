@@ -228,7 +228,7 @@ class EmployeesControllerTest < ActionController::TestCase
     post :submit, { :employee => { 'schedule' => schedule } }, :format => "json"
     assert_response :success
 
-    assert_requested(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&name=Daniel%20Bidulock", :headers => {'Content-Type'=>'application/json'} )
+    assert_requested(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&features%5B%5D=2&features%5B%5D=3&features%5B%5D=4&features%5B%5D=5&features%5B%5D=6&name=Daniel%20Bidulock", :headers => {'Content-Type'=>'application/json'} )
 
     response = assigns(:response)
     assert_not_nil response

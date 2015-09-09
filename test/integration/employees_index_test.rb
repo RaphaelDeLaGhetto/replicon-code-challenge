@@ -110,7 +110,7 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     find(:css, '#for-real').set(true)
     click_on 'Submit schedule'
 
-    assert_requested(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&name=Daniel%20Bidulock&solution=true")
+    assert_requested(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&features%5B%5D=2&features%5B%5D=3&features%5B%5D=4&features%5B%5D=5&features%5B%5D=6&name=Daniel%20Bidulock&solution=true")
 
     assert page.has_selector?('#thank-you', text: 'Thanks!')
     schedule = JSON.parse(File.read('test/json/schedule.json'))

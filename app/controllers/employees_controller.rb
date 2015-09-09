@@ -25,7 +25,7 @@ class EmployeesController < ApplicationController
   # submit
   #
   def submit
-    query = { name: 'Daniel Bidulock', email: 'daniel@bidulock.ca', features: [1] }
+    query = { name: 'Daniel Bidulock', email: 'daniel@bidulock.ca', features: [1, 2, 3, 4, 5, 6] }
 
     # For real submission
     query[:solution] = true if params[:employee][:solution] == '1'
