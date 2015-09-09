@@ -1,7 +1,9 @@
 replicon-code-challenge
 =======================
 
-This is my submission to the [Replicon](http://replicon.com) code challenge.
+This is my submission to the [Replicon](http://replicon.com) code challenge. It
+is fully-featured in line with the requirements outlined
+[here](docs/RepliconPreScreen.pdf).
 
 # Download
 
@@ -70,8 +72,3 @@ npm test
 ```
 rails s
 ```
-
-# License
-
-MIT
-
