@@ -36,7 +36,7 @@ RUN sudo -u app bundle install --deployment
 
 # 2015-8-31
 # All that above and I can't install without sudo?
-RUN sudo npm install
+#RUN sudo npm install
 # Why doesn't this work?
 #RUN sudo -u app npm install
 RUN sudo -u app RAILS_ENV=production rake assets:precompile
