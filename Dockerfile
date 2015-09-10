@@ -39,7 +39,7 @@ RUN sudo -u app bundle install --deployment
 #RUN sudo npm install
 # Why doesn't this work?
 #RUN sudo -u app npm install
-RUN sudo -u app RAILS_ENV=production rake assets:precompile
+RUN RAILS_ENV=production rake assets:precompile
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

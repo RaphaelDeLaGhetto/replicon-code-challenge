@@ -1,6 +1,3 @@
-# 2015-9-10
-# Adapted from: https://gist.github.com/johnbintz/36bd6d6bcd9e6cfcb8f4
-
 lock '3.4.0'
 
 set :application, 'replicon-code-challenge'
@@ -31,6 +28,14 @@ namespace :deploy do
     end
   end
 
+#  desc 'Precompile assets'
+#  task :rake_assets_precompile do
+#    on roles(:app) do
+#      execute "RAILS_ENV=production rake assets:precompile"
+#    end
+#  end
+
+
   desc 'Build Docker images'
   task :build do
     system "docker build -t #{fetch(:application)}-image ."
@@ -46,6 +51,7 @@ namespace :deploy do
   end
 
   before :updated, 'deploy:npm_install' 
+#  before :updated, 'deploy:rake_assets_precompile'
   after :publishing, 'deploy:build'
   after :publishing, 'deploy:restart'
 end
