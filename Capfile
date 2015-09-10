@@ -5,7 +5,6 @@ require 'capistrano/setup'
 require 'capistrano/deploy'
 
 # miscellaneous
-require 'capistrano/passenger'
 require 'capistrano/bundler'
 require 'capistrano/rails'
 

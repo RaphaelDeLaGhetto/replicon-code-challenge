@@ -29,7 +29,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Use Capistrano for deployment
 gem 'capistrano', group: :development
+gem 'capistrano-bundler'
 gem 'capistrano-rails', group: :development
+gem 'capistrano-rbenv', github: 'capistrano/rbenv'
+gem 'highline'
+
 
 # Bootstrap
 gem 'bootstrap-sass'
