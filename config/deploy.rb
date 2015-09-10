@@ -4,7 +4,7 @@
 lock '3.4.0'
 
 set :application, 'replicon-code-challenge'
-set :repo_url, 'git@github.com:RaphaelDeLaGhetto/replicon-code-challenge.git'
+set :repo_url, 'https://github.com/RaphaelDeLaGhetto/replicon-code-challenge.git'
 
 set :branch, 'master'
 set :scm, :git

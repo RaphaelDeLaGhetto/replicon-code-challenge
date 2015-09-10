@@ -28,11 +28,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-gem 'capistrano', group: :development
-gem 'capistrano-bundler'
+#gem 'capistrano', group: :development
+#gem 'capistrano-bundler'
 gem 'capistrano-rails', group: :development
-gem 'capistrano-rbenv', github: 'capistrano/rbenv'
-gem 'highline'
+#gem 'capistrano-rbenv', github: 'capistrano/rbenv'
+#gem 'highline'
 
 
 # Bootstrap
