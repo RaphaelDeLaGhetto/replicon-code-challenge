@@ -6,30 +6,77 @@ lock '3.4.0'
 set :application, 'replicon-code-challenge'
 set :repo_url, 'git@github.com:RaphaelDeLaGhetto/replicon-code-challenge.git'
 
-set :deploy_to, "/home/deploy/#{fetch(application)}"
+set :deploy_to, "/home/deploy/#{fetch(:application)}"
 
-desc 'Build Docker images'
-task :build do
-  execute "cd #{release_path} && npm install"
+# Default value for :linked_files is []
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'config/application.yml')
 
-  # build the actual docker image, tagging the push for the remote repo
-  system "docker build -t #{fetch(:application)}-image ."
-end
-
-desc 'go'
-task :go => ['build']
-
+# Default value for linked_dirs is []
+set :linked_dirs, fetch(:linked_dirs, []).push('log',
+                                               'tmp/pids',
+                                               'tmp/cache',
+                                               'tmp/sockets',
+                                               'vendor/bundle',
+                                               'public/system',
+                                               'node_modules')
 namespace :deploy do
+
+  desc 'Install node modules'
+  task :npm_install do
+    on roles(:app) do
+      execute "cd #{release_path} && npm install"
+    end
+  end
+
+  desc 'Build Docker images'
+  task :build do
+    system "docker build -t #{fetch(:application)}-image ."
+  end
+
+  desc 'Restart application'
   task :restart do
     on roles(:app) do
-      # in case the app isn't running on the other end
       execute "docker stop #{fetch(:application)} ; true"
-
-      # have to remove it otherwise --restart=always will run it again on reboot!
       execute "docker rm #{fetch(:application)} ; true"
-                                                              
-      # modify this to suit how you want to run your app
       execute "docker run --restart=always --name #{fetch(:application)} --expose 80 --expose 443 -e VIRTUAL_HOST=gofish.mobi --link postgres:postgres -d #{fetch(:application)}-image"
     end
   end
+
+  before :updated, 'deploy:npm_install' 
+  after :publishing, 'deploy:build'
+  after :publishing, 'deploy:restart'
 end
+
+# deploy
+#namespace :deploy do
+#
+#  # 2015-4-14 https://gist.github.com/ryanray/7579912
+#  desc 'Install node modules'
+#  task :npm_install do
+#    on roles(:app) do
+#      execute "cd #{release_path} && npm install"
+#    end
+#  end
+#                      
+#  desc 'Restart application'
+#  task :restart do
+#    on roles(:app), in: :sequence, wait: 5 do 
+#      execute :touch, release_path.join('tmp/restart.txt')
+#    end
+#  end
+#
+#  desc "Build missing paperclip styles"
+#  task :build_missing_paperclip_styles do
+#    on roles(:app) do
+#      #execute "cd #{current_path}; RAILS_ENV=production $HOME/.rbenv/bin/rbenv bundle exec rake paperclip:refresh:missing_styles"
+#      # 2015-5-12
+#      # http://stackoverflow.com/questions/29022523/build-missing-styles-on-paperclip-errors-out-on-missing-bundle
+#      execute "cd #{current_path}; RAILS_ENV=production $HOME/.rbenv/bin/rbenv exec bundle exec rake paperclip:refresh:missing_styles"
+#    end
+#  end
+#
+#  before :updated, 'deploy:npm_install' 
+#  after :deploy, 'deploy:build_missing_paperclip_styles'
+#  after :publishing, 'deploy:restart'
+#  after :finishing, 'deploy:cleanup'
+#end
