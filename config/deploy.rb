@@ -6,6 +6,9 @@ lock '3.4.0'
 set :application, 'replicon-code-challenge'
 set :repo_url, 'git@github.com:RaphaelDeLaGhetto/replicon-code-challenge.git'
 
+set :branch, 'master'
+set :scm, :git
+
 set :deploy_to, "/home/deploy/#{fetch(:application)}"
 
 # Default value for :linked_files is []

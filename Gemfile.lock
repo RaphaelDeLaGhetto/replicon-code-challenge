@@ -251,6 +251,7 @@ DEPENDENCIES
   browserify-rails
   byebug
   cancancan
+  capistrano
   capistrano-rails
   capybara
   coffee-rails (~> 4.1.0)
