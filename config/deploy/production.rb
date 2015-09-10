@@ -59,4 +59,4 @@
 #     auth_methods: %w(publickey password)
 #     # password: 'please use keys'
 #   }
-server "gofish.mobi", user: "deploy", roles: %w{web app}
+server "gofish.mobi", user: "app", roles: %w{web app}

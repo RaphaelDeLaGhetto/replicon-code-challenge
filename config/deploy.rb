@@ -6,7 +6,7 @@ set :repo_url, 'https://github.com/RaphaelDeLaGhetto/replicon-code-challenge.git
 set :branch, 'master'
 set :scm, :git
 
-set :deploy_to, "/home/deploy/#{fetch(:application)}"
+set :deploy_to, "/home/app/#{fetch(:application)}"
 
 # Default value for :linked_files is []
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'config/application.yml')
