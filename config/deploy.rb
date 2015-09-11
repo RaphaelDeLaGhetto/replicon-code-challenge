@@ -9,16 +9,17 @@ set :scm, :git
 set :deploy_to, "/home/app/#{fetch(:application)}"
 
 # Default value for :linked_files is []
-set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'config/application.yml')
+#set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'config/application.yml')
+#
+## Default value for linked_dirs is []
+#set :linked_dirs, fetch(:linked_dirs, []).push('log',
+#                                               'tmp/pids',
+#                                               'tmp/cache',
+#                                               'tmp/sockets',
+#                                               'vendor/bundle',
+#                                               'public/system',
+#                                               'node_modules')
 
-# Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push('log',
-                                               'tmp/pids',
-                                               'tmp/cache',
-                                               'tmp/sockets',
-                                               'vendor/bundle',
-                                               'public/system',
-                                               'node_modules')
 namespace :deploy do
 
   desc 'Install node modules'
@@ -38,6 +39,7 @@ namespace :deploy do
 
   desc 'Build Docker images'
   task :build do
+    system "cd #{release_path}/current"
     system "docker build -t #{fetch(:application)}-image ."
   end
 
