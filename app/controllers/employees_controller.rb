@@ -30,6 +30,11 @@ class EmployeesController < ApplicationController
     # For real submission
     query[:solution] = true if params[:employee][:solution] == '1'
 
+    if query[:solution] && !admin_logged_in?
+      flash[:error] = 'Only an administrator can submit for real'
+      return redirect_to root_path 
+    end
+
     @response = HTTParty.post("#{@@domain}/submit", 
       :body => params[:employee][:schedule],
       :query => query,

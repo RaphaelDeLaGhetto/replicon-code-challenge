@@ -210,6 +210,7 @@ class EmployeesControllerTest < ActionController::TestCase
 
     assert_equal 'The timeoff details could not be retrieved: 500', flash[:error]
   end
+
   #
   # submit
   #
@@ -229,6 +230,40 @@ class EmployeesControllerTest < ActionController::TestCase
     assert_response :success
 
     assert_requested(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&features%5B%5D=2&features%5B%5D=3&features%5B%5D=4&features%5B%5D=5&features%5B%5D=6&name=Daniel%20Bidulock", :headers => {'Content-Type'=>'application/json'} )
+
+    response = assigns(:response)
+    assert_not_nil response
+
+    assert_equal 'Thanks!', response['thank_you']
+    assert_equal schedule, response['submission']
+  end
+
+  test "should redirect if solution=true and not logged in as admin" do
+    sign_in(@agent)
+    get :index
+    assert_response :success
+
+    schedule = JSON.parse(File.read('test/json/schedule.json'))
+    post :submit, { :employee => { 'schedule' => schedule, 'solution' => '1' } }, :format => "json"
+    assert_redirected_to root_path 
+
+    assert_not_requested(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&features%5B%5D=2&features%5B%5D=3&features%5B%5D=4&features%5B%5D=5&features%5B%5D=6&name=Daniel%20Bidulock", :headers => {'Content-Type'=>'application/json'} )
+
+    assert_not_requested(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&features%5B%5D=2&features%5B%5D=3&features%5B%5D=4&features%5B%5D=5&features%5B%5D=6&name=Daniel%20Bidulock&solution=true", :headers => {'Content-Type'=>'application/json'} )
+
+    assert_equal 'Only an administrator can submit for real', flash[:error]
+  end
+
+  test "should POST data to replicon if solution-true and administrator is logged in" do
+    sign_in(@admin)
+    get :index
+    assert_response :success
+
+    schedule = JSON.parse(File.read('test/json/schedule.json'))
+    post :submit, { :employee => { 'schedule' => schedule, 'solution' => '1' } }, :format => "json"
+    assert_response :success
+
+    assert_requested(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&features%5B%5D=2&features%5B%5D=3&features%5B%5D=4&features%5B%5D=5&features%5B%5D=6&name=Daniel%20Bidulock&solution=true", :headers => {'Content-Type'=>'application/json'} )
 
     response = assigns(:response)
     assert_not_nil response
