@@ -12,20 +12,37 @@ class ActiveSupport::TestCase
 
   include ApplicationHelper
 
+  # Capybara
+  #
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL
 
   ## selenium
-#  options = {}
-#  Capybara.register_driver :selenium do |app|
-#    Capybara::Selenium::Driver.new(app, options)
+  options = {}
+  Capybara.register_driver :selenium do |app|
+    Capybara::Selenium::Driver.new(app, options)
+  end
+
+  # Uncomment to leave we browser open after test completes
+  # 2015-9-12 http://stackoverflow.com/questions/7555416/how-to-leave-browser-opened-even-after-selenium-ruby-script-finishes/12211500#12211500
+  # Also, it may be necessary to comment the teardown
+#  Capybara::Selenium::Driver.class_eval do
+#    def quit
+#      puts "Press RETURN to quit the browser"
+#      $stdin.gets
+#      @browser.quit
+#    rescue Errno::ECONNREFUSED
+#      # Browser must have already gone
+#    end
 #  end
 
+  Capybara.ignore_hidden_elements = false
+
   ## poltergeist
-  options = { js_errors: false }
-  Capybara.register_driver :poltergeist do |app|
-    Capybara::Poltergeist::Driver.new(app, options)
-  end
+#  options = { js_errors: false }
+#  Capybara.register_driver :poltergeist do |app|
+#    Capybara::Poltergeist::Driver.new(app, options)
+#  end
 
   #
   # mock_api
