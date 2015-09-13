@@ -24,7 +24,7 @@
     <%= form_for :employee, url: { action: "submit" } do |f| %>
       <%= f.hidden_field :schedule, value: @schedule.to_json %><br />
       <%= f.label :solution, "Submit for real" %>
-      <%= f.check_box :solution, id: 'for-real' %><br />
+      <%= f.check_box :solution, id: 'for-real', disabled: !admin_logged_in? %><br />
       <%= f.submit value: 'Submit schedule', class: 'btn btn-primary' %>
     <% end %>
   </span>

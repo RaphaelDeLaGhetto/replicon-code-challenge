@@ -97,7 +97,7 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     assert page.has_selector?('#submitted', visible: true)
   end
 
-  test "should submit the schedule to Replicon for real" do
+  test "should not submit for real unless logged in as admin" do
     # Sign in
     visit login_path
     fill_in 'Email', with: 'hands@example.gov'
@@ -105,6 +105,30 @@ class EmployeesIndexTest < ActionDispatch::IntegrationTest
     click_button "Log in"
 
     visit(employees_path)
+
+    # The checkbox helper method produces a hidden input with value 0 and
+    # a visible one with value 1.
+    assert page.has_selector?('#for-real', count: 1)
+    assert page.has_selector?("input[name='employee[solution]'][value='0'][disabled='disabled']", count: 1)
+    assert page.has_selector?("input[name='employee[solution]'][value='1'][disabled='disabled']", count: 1)
+  end
+
+  test "should submit the schedule to Replicon for real if admin" do
+    # Sign in
+    visit login_path
+    fill_in 'Email', with: 'daniel@example.com'
+    fill_in 'Password', with: 'password'
+    click_button "Log in"
+
+    visit(employees_path)
+
+    # The checkbox helper method produces a hidden input with value 0 and
+    # a visible one with value 1.
+    assert page.has_selector?('#for-real', count: 1)
+    assert page.has_selector?("input[name='employee[solution]'][value='0']", count: 1)
+    assert page.has_selector?("input[name='employee[solution]'][value='0'][disabled='disabled']", count: 0)
+    assert page.has_selector?("input[name='employee[solution]'][value='1']", count: 1)
+    assert page.has_selector?("input[name='employee[solution]'][value='1'][disabled='disabled']", count: 0)
 
     # Check the submit-for-real box
     find(:css, '#for-real').set(true)
