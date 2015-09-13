@@ -22,7 +22,6 @@ class ActiveSupport::TestCase
   Capybara.register_driver :selenium do |app|
     Capybara::Selenium::Driver.new(app, options)
   end
-
   # Uncomment to leave we browser open after test completes
   # 2015-9-12 http://stackoverflow.com/questions/7555416/how-to-leave-browser-opened-even-after-selenium-ruby-script-finishes/12211500#12211500
   # Also, it may be necessary to comment the teardown
@@ -71,11 +70,11 @@ class ActiveSupport::TestCase
 
     stub_request(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&features%5B%5D=2&features%5B%5D=3&features%5B%5D=4&features%5B%5D=5&features%5B%5D=6&name=Daniel%20Bidulock").
         to_return(:body => { thank_you: 'Thanks!', :submission => JSON.parse(File.read('test/json/schedule.json')) }.to_json,
-                  :headers => {'Content-Type' => 'application/json'})#  submission: File.new('test/json/week_26.json') }, :status => 200)
+                  :headers => {'Content-Type' => 'application/json'})
 
     stub_request(:post, "#{DOMAIN}/submit?email=daniel@bidulock.ca&features%5B%5D=1&features%5B%5D=2&features%5B%5D=3&features%5B%5D=4&features%5B%5D=5&features%5B%5D=6&name=Daniel%20Bidulock&solution=true").
         to_return(:body => { thank_you: 'Thanks!', :submission => JSON.parse(File.read('test/json/schedule.json')) }.to_json,
-                  :headers => {'Content-Type' => 'application/json'})#  submission: File.new('test/json/week_26.json') }, :status => 200)
+                  :headers => {'Content-Type' => 'application/json'})
   end
 end
 
