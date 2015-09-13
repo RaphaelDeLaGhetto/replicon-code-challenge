@@ -9,6 +9,9 @@ set :scm, :git
 set :deploy_to, "/home/app/#{fetch(:application)}"
 
 # Default value for :linked_files is []
+set :copy_files, ['config/database.yml', 'config/secrets.yml', 'config/application.yml']
+
+# Default value for :linked_files is []
 #set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'config/application.yml')
 #
 ## Default value for linked_dirs is []
@@ -39,8 +42,9 @@ namespace :deploy do
 
   desc 'Build Docker images'
   task :build do
-    system "cd #{release_path}/current"
-    system "docker build -t #{fetch(:application)}-image ."
+    on roles(:app) do
+    execute "cd #{release_path} && docker build -t #{fetch(:application)}-image ."
+    end
   end
 
   desc 'Restart application'
@@ -58,36 +62,3 @@ namespace :deploy do
   after :publishing, 'deploy:restart'
 end
 
-# deploy
-#namespace :deploy do
-#
-#  # 2015-4-14 https://gist.github.com/ryanray/7579912
-#  desc 'Install node modules'
-#  task :npm_install do
-#    on roles(:app) do
-#      execute "cd #{release_path} && npm install"
-#    end
-#  end
-#                      
-#  desc 'Restart application'
-#  task :restart do
-#    on roles(:app), in: :sequence, wait: 5 do 
-#      execute :touch, release_path.join('tmp/restart.txt')
-#    end
-#  end
-#
-#  desc "Build missing paperclip styles"
-#  task :build_missing_paperclip_styles do
-#    on roles(:app) do
-#      #execute "cd #{current_path}; RAILS_ENV=production $HOME/.rbenv/bin/rbenv bundle exec rake paperclip:refresh:missing_styles"
-#      # 2015-5-12
-#      # http://stackoverflow.com/questions/29022523/build-missing-styles-on-paperclip-errors-out-on-missing-bundle
-#      execute "cd #{current_path}; RAILS_ENV=production $HOME/.rbenv/bin/rbenv exec bundle exec rake paperclip:refresh:missing_styles"
-#    end
-#  end
-#
-#  before :updated, 'deploy:npm_install' 
-#  after :deploy, 'deploy:build_missing_paperclip_styles'
-#  after :publishing, 'deploy:restart'
-#  after :finishing, 'deploy:cleanup'
-#end

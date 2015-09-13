@@ -65,6 +65,8 @@ GEM
     capistrano-bundler (1.1.4)
       capistrano (~> 3.1)
       sshkit (~> 1.2)
+    capistrano-copy-files (0.0.1)
+      capistrano (>= 3.0.0)
     capistrano-rails (1.1.3)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
@@ -251,6 +253,7 @@ DEPENDENCIES
   browserify-rails
   byebug
   cancancan
+  capistrano-copy-files
   capistrano-rails
   capybara
   coffee-rails (~> 4.1.0)
