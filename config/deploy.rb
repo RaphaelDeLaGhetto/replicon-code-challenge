@@ -43,7 +43,7 @@ namespace :deploy do
   desc 'Build Docker images'
   task :build do
     on roles(:app) do
-    execute "cd #{release_path} && docker build -t #{fetch(:application)}-image ."
+      execute "cd #{release_path} && docker build -t #{fetch(:application)}-image ."
     end
   end
 
@@ -57,6 +57,7 @@ namespace :deploy do
   end
 
   before :updated, 'deploy:npm_install' 
+  before :updated, 'deploy:updating' 
 #  before :updated, 'deploy:rake_assets_precompile'
   after :publishing, 'deploy:build'
   after :publishing, 'deploy:restart'
